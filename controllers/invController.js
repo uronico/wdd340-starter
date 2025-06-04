@@ -42,4 +42,18 @@ invCont.causeError = function(req, res, next) {
   next(new Error("This is an intentional server error (500) for testing purposes."))
 }
 
+invCont.buildAddInventory = async function(req, res, next) {
+  try {
+    const classificationList = await utilities.buildClassificationList()
+    let nav = await utilities.getNav()
+    res.render("inventory/add-inventory", {
+      title: "Add Inventory",
+      classificationList,
+      nav
+    })
+  } catch (error) {
+    next(error)
+  }
+}
+
 module.exports = invCont

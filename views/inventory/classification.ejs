@@ -4,6 +4,10 @@
   res.redirect('/')
 } %> 
 
+<% if (typeof messages === "function" && messages().trim()) { %>
+  <div class="flash-message"><%- messages() %></div>
+<% } %>
+
 <%# messages() %>
 
 <%- grid %>

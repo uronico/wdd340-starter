@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title><%= title %></title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="stylesheet" href="/css/styles.css">
+  <script>
+    function togglePassword() {
+      const pwd = document.getElementById('password');
+      if (pwd.type === 'password') {
+        pwd.type = 'text';
+      } else {
+        pwd.type = 'password';
+      }
+    }
+  </script>
+</head>
+<body>
+  <main class="register-main">
+    <h1><%= title %></h1>
+    <% if (typeof messages === "function" && messages().trim()) { %>
+    <div class="flash-message"><%- messages() %></div>
+    <% } %>
+    <% if (errors) { %>
+    <ul class="notice">
+    <% errors.array().forEach(error => { %>
+    <li><%= error.msg %></li>
+    <%  }) %>
+    </ul>
+    <% } %>
+    <form action="/account/register" method="post">
+      <label for="first_name">First Name</label>
+      <input 
+        type="text" 
+        id="first_name" 
+        name="account_firstname" 
+        required 
+        value="<%= locals.account_firstname %>"
+        autocomplete="given-name"
+      >
+
+      <label for="last_name">Last Name</label>
+      <input 
+        type="text" 
+        id="last_name" 
+        name="account_lastname" 
+        required 
+        value="<%= locals.account_lastname %>"
+        autocomplete="family-name"
+      >
+
+      <label for="email">Email Address</label>
+      <input 
+        type="email" 
+        id="email" 
+        name="account_email" 
+        required 
+        value="<%= locals.account_email %>"
+        autocomplete="username"
+      >
+
+      <label for="password">Password</label>
+      <input 
+        type="password" 
+        id="password" 
+        name="account_password" 
+        required 
+        autocomplete="new-password"
+        pattern="^(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[^a-zA-Z0-9])(?!.*\s).{12,}$"
+        title="Password must be at least 12 characters and include 1 uppercase letter, 1 number, and 1 special character."
+      >
+      <button type="button" class="toggle-password" onclick="togglePassword()">Show/Hide Password</button>
+      <div class="password-note">
+        <strong>Password requirements:</strong><br>
+        - Minimum 12 characters<br>
+        - At least 1 capital letter<br>
+        - At least 1 number<br>
+        - At least 1 special character
+      </div>
+
+      <button type="submit">Register</button>
+    </form>
+  </main>
+</body>
+</html>

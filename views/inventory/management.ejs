@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Inventory Management</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="stylesheet" href="/css/styles.css">
+</head>
+<body>
+  <main class="management-main">
+    <h1>Inventory Management</h1>
+    <% if (typeof messages === "function" && messages().trim()) { %>
+      <div class="message"><%- messages() %></div>
+    <% } %>
+    <div class="management-links">
+      <a href="/inv/add-classification">Add New Classification</a>
+      <a href="/inv/add-inventory">Add New Inventory</a>
+    </div>
+  </main>
+</body>
+</html>

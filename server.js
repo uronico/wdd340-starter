@@ -15,6 +15,7 @@ const inventoryRoute = require("./routes/inventoryRoute")
 const utilities = require("./utilities")
 const session = require("express-session")
 const pool = require('./database/')
+const bodyParser = require("body-parser")
 
 /* ***********************
  * Middleware
@@ -37,6 +38,9 @@ app.use(function(req, res, next){
   next()
 })
 
+app.use(bodyParser.json())
+app.use(bodyParser.urlencoded({ extended: true })) // for parsing application/x-www-form-urlencoded
+
 /* ***********************
  * View Engine and Templates
  *************************/
@@ -54,6 +58,9 @@ app.get("/", baseController.buildHome)
 
 // Inventory routes
 app.use("/inv", inventoryRoute)
+
+// Account routes
+app.use("/account", require("./routes/accountRoute"))
 
 // File Not Found Route - must be last route in list
 app.use(async (req, res, next) => {
