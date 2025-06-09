@@ -42,6 +42,14 @@ invCont.causeError = function(req, res, next) {
   next(new Error("This is an intentional server error (500) for testing purposes."))
 }
 
+invCont.buildManagement = async function(req, res, next) {
+  let nav = await utilities.getNav()
+  res.render("inventory/management", {
+    title: "Inventory Management",
+    nav
+  })
+}
+
 invCont.buildAddInventory = async function(req, res, next) {
   try {
     const classificationList = await utilities.buildClassificationList()
@@ -51,6 +59,40 @@ invCont.buildAddInventory = async function(req, res, next) {
       classificationList,
       nav
     })
+  } catch (error) {
+    next(error)
+  }
+}
+
+// Show the add-classification form
+invCont.buildAddClassification = async function(req, res, next) {
+  let nav = await utilities.getNav()
+  res.render("inventory/add-classification", {
+    title: "Add Classification",
+    nav
+  })
+}
+
+// Handle the form POST
+invCont.addClassification = async function(req, res, next) {
+  let nav = await utilities.getNav()
+  const { classification_name } = req.body
+  try {
+    const result = await invModel.addClassification(classification_name)
+    if (result) {
+      // Success: show management view with success message
+      nav = await utilities.getNav() // update nav to include new classification
+      req.flash("notice", "Classification added successfully!")
+      res.redirect("/inv/management")
+    } else {
+      // Failure: show form with error
+      req.flash("notice", "Failed to add classification.")
+      res.status(500).render("inventory/add-classification", {
+        title: "Add Classification",
+        nav,
+        classification_name
+      })
+    }
   } catch (error) {
     next(error)
   }

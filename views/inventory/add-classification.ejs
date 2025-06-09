@@ -5,7 +5,20 @@
   <title>Add Classification</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <link rel="stylesheet" href="/css/styles.css">
-
+  <script>
+    // Client-side validation for classification name
+    function validateClassificationForm(event) {
+      const input = document.getElementById('classification_name');
+      const pattern = /^[A-Za-z0-9]+$/;
+      if (!pattern.test(input.value)) {
+        alert("Classification name must contain only letters and numbers, no spaces or special characters.");
+        input.focus();
+        event.preventDefault();
+        return false;
+      }
+      return true;
+    }
+  </script>
 </head>
 <body>
   <main class="add-classification-main">
