@@ -14,20 +14,32 @@ router.get("/detail/:inv_id", invController.buildDetailView)
 // Intentional 500 error route
 router.get("/cause-error", invController.causeError)
 
-router.get("/management", utilities.handleErrors(invController.buildManagement))
+router.get("/management", invController.buildManagement)
 
 // Route to build add inventory view
-router.get("/add-inventory", utilities.handleErrors(invController.buildAddInventory))
+router.get("/add-inventory", invController.buildAddInventory)
+
+// Process the add inventory form
+router.post(
+  "/add-inventory",
+  validate.inventoryRules(),           // your validation middleware
+  validate.checkInventoryData,         // your validation error handler
+  utilities.handleErrors(invController.addInventory)
+)
 
 // Route to show the add-classification form
-router.get("/add-classification", utilities.handleErrors(invController.buildAddClassification))
+router.get("/add-classification", invController.buildAddClassification)
 
 // Route to process the add-classification form
 router.post(
   "/add-classification",
   validate.classificationRules(),         
   validate.checkClassificationData,       
-  utilities.handleErrors(invController.addClassification) 
+  invController.addClassification 
 )
+
+// Get inventory for AJAX Route
+router.get("/getInventory/:classification_id", 
+  utilities.handleErrors(invController.getInventoryJSON))
 
 module.exports = router;
