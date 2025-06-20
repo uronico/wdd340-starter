@@ -31,5 +31,29 @@ router.post(
 // Route for account management view
 router.get("/", utilities.checkLogin, utilities.handleErrors(accountController.buildAccountManagement))
 
+// Deliver the account update view
+router.get("/update/:account_id", utilities.handleErrors(accountController.buildUpdateAccount))
+
+// Process account info update
+router.post(
+  "/update",
+  regValidate.accountUpdateRules(),
+  regValidate.checkAccountUpdateData,
+  utilities.handleErrors(accountController.updateAccount)
+)
+
+// Process password update
+router.post(
+  "/update-password",
+  regValidate.passwordUpdateRules(),
+  regValidate.checkPasswordUpdateData,
+  utilities.handleErrors(accountController.updatePassword)
+)
+
+router.get("/logout", (req, res) => {
+  res.clearCookie("jwt") // or whatever your JWT cookie name is
+  req.flash("notice", "You have been logged out.")
+  res.redirect("/")
+})
 
 module.exports = router;

@@ -17,6 +17,7 @@ const session = require("express-session")
 const pool = require('./database/')
 const bodyParser = require("body-parser")
 const cookieParser = require("cookie-parser")
+const flash = require('connect-flash')
 
 /* ***********************
  * Middleware
@@ -33,7 +34,7 @@ const cookieParser = require("cookie-parser")
 }))
 
 // Express Messages Middleware
-app.use(require('connect-flash')())
+app.use(flash())
 app.use(function(req, res, next){
   res.locals.messages = require('express-messages')(req, res)
   next()

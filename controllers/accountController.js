@@ -119,9 +119,62 @@ async function buildAccountManagement(req, res, next) {
   let nav = await utilities.getNav()
   res.render("account/management", {
     title: "Account Management",
-    nav
+    nav,
+    accountData: res.locals.accountData || null,
   })
 }
 
+// Deliver the update view
+async function buildUpdateAccount(req, res, next) {
+  let nav = await utilities.getNav()
+  const account_id = req.params.account_id
+  const accountData = await accountModel.getAccountById(account_id)
+  res.render("account/update", {
+    title: "Update Account",
+    nav,
+    accountData,
+    errors: []
+  })
+}
 
-module.exports = { buildLogin, buildRegister, registerAccount, accountLogin, buildAccountManagement }
+// Handle account info update
+async function updateAccount(req, res, next) {
+  const { account_id, account_firstname, account_lastname, account_email } = req.body
+  const updateResult = await accountModel.updateAccount(account_id, account_firstname, account_lastname, account_email)
+  if (updateResult) {
+    req.flash("notice", "Account information updated successfully!")
+  } else {
+    req.flash("notice", "Account update failed. Please try again.")
+  }
+  const accountData = await accountModel.getAccountById(account_id)
+  let nav = await utilities.getNav()
+  res.render("account/management", {
+    title: "Account Management",
+    nav,
+    accountData,
+    errors: []
+  })
+}
+
+// Handle password update
+async function updatePassword(req, res, next) {
+  const { account_id, account_password } = req.body
+  const hashedPassword = await bcrypt.hash(account_password, 10)
+  const updateResult = await accountModel.updatePassword(account_id, hashedPassword)
+  if (updateResult) {
+    req.flash("notice", "Password updated successfully!")
+  } else {
+    req.flash("notice", "Password update failed. Please try again.")
+  }
+  const accountData = await accountModel.getAccountById(account_id)
+  let nav = await utilities.getNav()
+  res.render("account/management", {
+    title: "Account Management",
+    accountData,
+    nav,
+    errors: []
+  })
+}
+
+module.exports = { buildLogin, buildRegister, registerAccount, accountLogin, buildAccountManagement
+, buildUpdateAccount, updateAccount, updatePassword}

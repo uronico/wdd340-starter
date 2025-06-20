@@ -9,16 +9,26 @@
 <body>
   <main class="management-main">
     <h1>Inventory Management</h1>
-    <% if (typeof messages === "function" && messages().trim()) { %>
-      <div class="message"><%- messages() %></div>
-    <% } %>
+    <%- messages() %>
     <div class="management-links">
       <a href="/inv/add-classification">Add New Classification</a>
       <a href="/inv/add-inventory">Add New Inventory</a>
     </div>
-    </h2>Manage Inventory</h2>
+    <h2>Manage Inventory</h2>
     <p>Choose a classification to see those inventory items.</p>
     <%- classificationSelect %>
+
+    <% if (typeof classifications !== "undefined" && classifications.length > 0) { %>
+  <h2>Classifications</h2>
+  <ul>
+    <% classifications.forEach(function(classification) { %>
+      <li>
+        <%= classification.classification_name %>
+        <a href="/inv/delete-classification/<%= classification.classification_id %>">Delete</a>
+      </li>
+    <% }) %>
+  </ul>
+  <% } %>
 
     <table id="inventoryDisplay"></table>
 

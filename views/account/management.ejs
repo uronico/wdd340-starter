@@ -9,19 +9,19 @@
 <body>
   <main class="account-management-main">
     <h1>Account Management</h1>
-    <% if (typeof messages === "function" && messages().trim()) { %>
-      <div class="flash-message"><%- messages() %></div>
+    <%- messages() %>
+    
+    <% if (accountData) { %>
+      <h2>Welcome <%= accountData.account_firstname %></h2>
+      <a href="/account/update/<%= accountData.account_id %>">Update Account Information</a>
+      <% if (accountData.account_type === "Employee" || accountData.account_type === "Admin") { %>
+        <h3>Inventory Management</h3>
+        <p>
+          <a href="/inv/management">Go to Inventory Management</a>
+        </p>
+      <% } %>
     <% } %>
-    <% if (typeof errors !== "undefined" && errors.length > 0) { %>
-      <div class="flash-message">
-        <ul>
-          <% errors.forEach(function(error) { %>
-            <li><%= error.msg %></li>
-          <% }) %>
-        </ul>
-      </div>
-    <% } %>
-    <p>You're logged in.</p>
+
   </main>
 </body>
 </html>

@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title><%= title %></title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="stylesheet" href="/css/styles.css">
+</head>
+<body>
+  <main class="delete-classification-main">
+    <h1><%= title %></h1>
+    <% if (typeof messages === "function" && messages().trim()) { %>
+      <div class="flash-message"><%- messages() %></div>
+    <% } %>
+    <% if (typeof errors !== "undefined" && errors.length > 0) { %>
+      <div class="flash-message">
+        <ul>
+          <% errors.forEach(function(error) { %>
+            <li><%= error.msg %></li>
+          <% }) %>
+        </ul>
+      </div>
+    <% } %>
+    <p>Are you sure you want to delete the classification "<%= classification.classification_name %>"? This action cannot be undone.</p>
+    <form action="/inv/delete-classification" method="post">
+      <input type="hidden" name="classification_id" value="<%= classification.classification_id %>">
+      <button type="submit">Delete Classification</button>
+    </form>
+    <a href="/inv/management">Cancel</a>
+  </main>
+</body>
+</html>

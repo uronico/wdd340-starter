@@ -112,4 +112,54 @@ validate.checkLoginData = async (req, res, next) => {
   next()
 }
 
+// Account info update rules
+validate.accountUpdateRules = () => [
+  body("account_firstname").trim().notEmpty().withMessage("First name is required."),
+  body("account_lastname").trim().notEmpty().withMessage("Last name is required."),
+  body("account_email")
+    .trim()
+    .isEmail().withMessage("A valid email is required.")
+    .custom(async (email, { req }) => {
+      const account = await accountModel.getAccountByEmail(email)
+      if (account && account.account_id != req.body.account_id) {
+        throw new Error("Email already exists. Please use a different email.")
+      }
+      return true
+    })
+]
+
+// Password update rules
+validate.passwordUpdateRules = () => [
+  body("account_password")
+    .isLength({ min: 12 }).withMessage("Password must be at least 12 characters.")
+    .matches(/[A-Z]/).withMessage("Password must contain an uppercase letter.")
+    .matches(/\d/).withMessage("Password must contain a number.")
+    .matches(/[!@#$%^&*]/).withMessage("Password must contain a special character.")
+]
+
+// Error handlers
+validate.checkAccountUpdateData = async (req, res, next) => {
+  const errors = validationResult(req)
+  if (!errors.isEmpty()) {
+    return res.render("account/update", {
+      title: "Update Account",
+      errors: errors.array(),
+      accountData: req.body
+    })
+  }
+  next()
+}
+
+validate.checkPasswordUpdateData = async (req, res, next) => {
+  const errors = validationResult(req)
+  if (!errors.isEmpty()) {
+    return res.render("account/update", {
+      title: "Update Account",
+      errors: errors.array(),
+      accountData: req.body
+    })
+  }
+  next()
+}
+
 module.exports = validate
